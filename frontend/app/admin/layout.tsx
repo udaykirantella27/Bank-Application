@@ -16,13 +16,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex bg-white relative overflow-hidden">
+    <div className="min-h-[calc(100vh-4rem)] flex bg-gradient-to-br from-[#e6f7ec]/60 via-white to-[#f0fdf4]/30 relative overflow-hidden">
       
       {/* Sidebar */}
-      <div className="w-64 border-r border-gray-100 flex-shrink-0 flex flex-col py-8 px-4 bg-white z-10">
+      <div className="w-64 flex-shrink-0 flex flex-col py-8 px-4 bg-transparent z-10">
         <div className="mb-6 px-2">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Admin Control</p>
-          <div className="flex items-center gap-2 bg-[#e6f7ec]/50 text-[#00b074] px-3 py-2 rounded-lg font-medium text-sm mb-6">
+          <p className="text-xs font-bold text-gray-900 uppercase tracking-widest mb-3">Admin Control</p>
+          <div className="flex items-center gap-2 bg-white shadow-sm text-[#00b074] px-3 py-2 rounded-lg font-medium text-sm mb-6">
             <ShieldCheck className="h-4 w-4" />
             Elevated Access
           </div>
@@ -36,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link 
                 key={link.name} 
                 href={link.href}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all text-left ${isActive ? 'bg-[#0f172a] text-white shadow-sm' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-50'}`}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium text-sm transition-all text-left ${isActive ? 'bg-white shadow-[0_2px_10px_-3px_rgba(0,176,116,0.15)] text-[#00b074]' : 'text-gray-500 hover:text-gray-900 hover:bg-white/50'}`}
               >
                 <Icon className={`h-4 w-4 ${isActive ? 'text-[#00b074]' : ''}`} />
                 {link.name}

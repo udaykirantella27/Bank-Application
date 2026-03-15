@@ -44,7 +44,7 @@ export default function AdminPage() {
       <div className="mb-8 relative z-10">
         <div className="flex items-center gap-3 mb-2">
           <Megaphone className="h-8 w-8 text-[#e6f7ec] stroke-[#00b074] stroke-[1.5] fill-[#e6f7ec]" />
-          <h1 className="text-[28px] font-bold text-gray-400">Send Promotional Loan Offer</h1>
+          <h1 className="text-[28px] font-black text-gray-900">Send Promotional Loan Offer</h1>
         </div>
         <p className="text-[#9ca3af] text-[15px]">
           Generate secure instant-apply links sent concurrently via Email (Nodemailer) and SMS (MSG91).
@@ -60,7 +60,7 @@ export default function AdminPage() {
               type="email" 
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-2 focus:ring-[#00b074]/20 focus:border-[#00b074] outline-none transition-all shadow-sm hover:border-gray-300"
+              className="w-full px-4 py-3.5 bg-white shadow-sm rounded-xl text-sm text-gray-900 focus:ring-2 focus:ring-[#00b074]/20 outline-none transition-all hover:shadow-md border-0"
             />
           </div>
           
@@ -70,7 +70,7 @@ export default function AdminPage() {
               type="text" 
               value={phone}
               onChange={e => setPhone(e.target.value)}
-              className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm text-gray-500 focus:ring-2 focus:ring-[#00b074]/20 focus:border-[#00b074] outline-none transition-all shadow-sm hover:border-gray-300"
+              className="w-full px-4 py-3.5 bg-white shadow-sm rounded-xl text-sm text-gray-500 focus:ring-2 focus:ring-[#00b074]/20 outline-none transition-all hover:shadow-md border-0"
             />
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function AdminPage() {
             type="text" 
             value={amount}
             onChange={e => setAmount(e.target.value)}
-            className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-xl font-bold text-[#00b074] focus:ring-2 focus:ring-[#00b074]/20 focus:border-[#00b074] outline-none transition-all shadow-sm hover:border-gray-300"
+            className="w-full px-4 py-3.5 bg-white shadow-sm rounded-xl text-xl font-bold text-[#00b074] focus:ring-2 focus:ring-[#00b074]/20 outline-none transition-all hover:shadow-md border-0"
           />
         </div>
 
@@ -91,7 +91,7 @@ export default function AdminPage() {
             rows={4}
             value={message}
             onChange={e => setMessage(e.target.value)}
-            className="w-full px-4 py-3.5 border border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-2 focus:ring-[#00b074]/20 focus:border-[#00b074] outline-none resize-none transition-all shadow-sm hover:border-gray-300"
+            className="w-full px-4 py-3.5 bg-white shadow-sm rounded-xl text-sm text-gray-900 focus:ring-2 focus:ring-[#00b074]/20 outline-none resize-none transition-all hover:shadow-md border-0"
           />
           <p className="text-[11px] text-[#8ea7c5] mt-1 font-medium">
             The secure application link <span className="text-gray-400">'?offer=XYZ'</span> will be injected automatically below this message.
@@ -113,11 +113,11 @@ export default function AdminPage() {
         )}
 
         <div className="pt-2">
-           <button 
+          <button
             type="submit"
             disabled={loading}
             className="w-full bg-[#0f172a] hover:bg-[#1e293b] text-white py-3.5 rounded-lg text-[15px] font-bold flex items-center justify-center gap-2 transition-colors focus:ring-4 focus:ring-slate-200 disabled:opacity-75 disabled:cursor-not-allowed"
-           >
+          >
             {loading ? (
               <>Sending Secure Offer Link...</>
             ) : (
@@ -126,7 +126,7 @@ export default function AdminPage() {
                 Send Secure Offer Link
               </>
             )}
-           </button>
+          </button>
         </div>
 
 
