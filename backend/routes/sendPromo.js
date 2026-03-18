@@ -50,13 +50,13 @@ router.post('/', async (req, res) => {
     const fs = require('fs');
     const path = require('path');
     const historyPath = path.join(__dirname, '../data/history.json');
-    
+
     let history = [];
     if (fs.existsSync(historyPath)) {
       const data = fs.readFileSync(historyPath, 'utf8');
       if (data) history = JSON.parse(data);
     }
-    
+
     // Add new record at the top of the array
     history.unshift({
       id: Date.now().toString(),
@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
       sentAt: new Date().toISOString(),
       status: 'Delivered'
     });
-    
+
     fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
     // ------------------------
 
