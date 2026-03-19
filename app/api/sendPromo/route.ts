@@ -1,24 +1,23 @@
-const express = require('express');
-const router = express.Router();
+import { NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 
-const nodemailer = require('nodemailer');
-
-// Use environment variables for email authentication
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'uday39865@gmail.com',
-    pass: process.env.EMAIL_APP_PASSWORD
-  }
-});
-
-router.post('/', async (req, res) => {
+export async function POST(req: Request) {
   try {
-    const { email, phone, amount, message } = req.body;
+    const { email, phone, amount, message } = await req.json();
 
     if (!email || !amount) {
-      return res.status(400).json({ error: 'Email and Amount are required' });
+      return NextResponse.json({ error: 'Email and Amount are required' }, { status: 400 });
     }
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'uday39865@gmail.com',
+        pass: process.env.EMAIL_APP_PASSWORD,
+      }
+    });
 
     const mailOptions = {
       from: '"QuincyBlessy Financial Services" <uday39865@gmail.com>',
@@ -31,7 +30,7 @@ router.post('/', async (req, res) => {
           <p>You are eligible for a personal loan up to <strong>₹${amount}</strong>.</p>
           <p style="font-style: italic; color: #555;">${message}</p>
           <div style="margin: 30px 0;">
-            <a href="http://localhost:3000/apply-loan?offer=${amount}" style="background-color: #00b074; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/apply-loan?offer=${amount}" style="background-color: #00b074; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
               Apply Instantly
             </a>
           </div>
@@ -46,18 +45,12 @@ router.post('/', async (req, res) => {
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.response);
 
-    // --- History Tracking ---
-    const fs = require('fs');
-    const path = require('path');
     const historyPath = path.join(process.cwd(), 'data', 'history.json');
-
-    let history = [];
+    let history: any[] = [];
     if (fs.existsSync(historyPath)) {
       const data = fs.readFileSync(historyPath, 'utf8');
       if (data) history = JSON.parse(data);
     }
-
-    // Add new record at the top of the array
     history.unshift({
       id: Date.now().toString(),
       email,
@@ -67,15 +60,14 @@ router.post('/', async (req, res) => {
       sentAt: new Date().toISOString(),
       status: 'Delivered'
     });
-
+    
+    const dir = path.dirname(historyPath);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
-    // ------------------------
 
-    res.json({ success: true, message: 'Promotions sent successfully' });
+    return NextResponse.json({ success: true, message: 'Promotions sent successfully' });
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({ error: 'Failed to send promotional email' });
+    return NextResponse.json({ error: 'Failed to send promotional email' }, { status: 500 });
   }
-});
-
-module.exports = router;
+}

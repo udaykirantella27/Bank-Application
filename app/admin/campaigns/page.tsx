@@ -10,7 +10,7 @@ export default function AdminCampaignsPage() {
   const fetchHistory = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/campaigns`);
+      const response = await fetch('/api/campaigns');
       if (response.ok) {
         const data = await response.json();
         setHistory(data);
