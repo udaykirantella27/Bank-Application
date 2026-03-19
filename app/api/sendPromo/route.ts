@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       service: 'gmail',
       auth: {
         user: 'uday39865@gmail.com',
-        pass: process.env.EMAIL_APP_PASSWORD,
+        pass: process.env.EMAIL_APP_PASSWORD || 'yayj bhit goon kcax',
       }
     });
 
@@ -45,7 +45,8 @@ export async function POST(req: Request) {
     const info = await transporter.sendMail(mailOptions);
     console.log('Email sent:', info.response);
 
-    const historyPath = path.join(process.cwd(), 'data', 'history.json');
+    // Use /tmp for Vercel's read-only filesystem
+    const historyPath = process.env.VERCEL ? '/tmp/history.json' : path.join(process.cwd(), 'data', 'history.json');
     let history: any[] = [];
     if (fs.existsSync(historyPath)) {
       const data = fs.readFileSync(historyPath, 'utf8');
