@@ -1,10 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Hexagon, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
 
 export default function Navbar() {
   const [email, setEmail] = useState<string | null>(null);
@@ -13,6 +11,7 @@ export default function Navbar() {
     // Check mock session
     const storedEmail = localStorage.getItem('bank_user_email');
     if (storedEmail) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setEmail(storedEmail);
     }
   }, []);

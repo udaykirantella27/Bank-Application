@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { RefreshCw, Search, Calendar, FileText, IndianRupee } from 'lucide-react';
+import { RefreshCw, Search, Calendar, IndianRupee } from 'lucide-react';
 
 export default function AdminCampaignsPage() {
-  const [history, setHistory] = useState<any[]>([]);
+  const [history, setHistory] = useState<Array<{ id: string, email: string, phone: string, amount: string, sentAt: string, status: string }>>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchHistory = async () => {

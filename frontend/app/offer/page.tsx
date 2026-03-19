@@ -72,7 +72,7 @@ export default function Offers() {
             Financial products built for <span className="text-primary">your goals</span>
           </h1>
           <p className="max-w-2xl mx-auto text-lg text-muted-foreground">
-            Whether you're buying a home, starting a business, or consolidating debt, 
+            Whether you&apos;re buying a home, starting a business, or consolidating debt, 
             we have the right loan product with industry-leading rates to help you succeed.
           </p>
         </div>

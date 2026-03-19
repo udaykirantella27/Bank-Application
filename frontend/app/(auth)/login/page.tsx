@@ -1,14 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Landmark, ArrowRight, Loader2, Info } from 'lucide-react';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'error' | 'success', text: string } | null>(null);
-  const router = useRouter();
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +30,7 @@ export default function Login() {
       } else {
         window.location.href = '/dashboard';
       }
-    } catch (error: any) {
+    } catch {
       setMessage({ type: 'error', text: 'An unexpected error occurred.' });
       setLoading(false);
     }

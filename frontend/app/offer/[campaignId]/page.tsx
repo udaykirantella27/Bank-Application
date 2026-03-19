@@ -15,7 +15,7 @@ export default function CampaignOffer() {
       </div>
       <h1 className="text-4xl font-bold mb-6 tracking-tight">Special Offer: {campaignId.toUpperCase()}</h1>
       <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
-        You've unlocked an exclusive financial product bundle. Enjoy reduced interest rates and priority processing when you apply today.
+        You&apos;ve unlocked an exclusive financial product bundle. Enjoy reduced interest rates and priority processing when you apply today.
       </p>
 
       <Link 

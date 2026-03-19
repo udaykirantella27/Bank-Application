@@ -70,8 +70,9 @@ export default function ApplyLoan() {
         router.push('/dashboard');
       }, 2000);
 
-    } catch (error: any) {
-      setMessage({ type: 'error', text: error.message || 'An error occurred while submitting.' });
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred while submitting.';
+      setMessage({ type: 'error', text: errorMessage });
     } finally {
       if (message?.type !== 'success') setLoading(false);
     }
@@ -83,7 +84,7 @@ export default function ApplyLoan() {
         <h1 className="text-3xl font-bold tracking-tight">Apply for a Loan</h1>
         <p className="text-muted-foreground mt-2">
           Fill out the secure form below to apply for your new loan. 
-          We'll process it and get back to you shortly.
+          We&apos;ll process it and get back to you shortly.
         </p>
       </div>
 

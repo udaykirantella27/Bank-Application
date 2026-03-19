@@ -12,7 +12,7 @@ export default function AdminPage() {
   const [successStatus, setSuccessStatus] = useState<boolean>(false);
   const [errorStatus, setErrorStatus] = useState<boolean>(false);
 
-  const handleSend = async (e: any) => {
+  const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setErrorStatus(false);
@@ -27,7 +27,7 @@ export default function AdminPage() {
 
       if (!response.ok) throw new Error('API Error');
       setSuccessStatus(true);
-    } catch (err) {
+    } catch {
       setErrorStatus(true);
     } finally {
       setLoading(false);
@@ -94,7 +94,7 @@ export default function AdminPage() {
             className="w-full px-4 py-3.5 bg-white shadow-sm rounded-xl text-sm text-gray-900 focus:ring-2 focus:ring-[#00b074]/20 outline-none resize-none transition-all hover:shadow-md border-0"
           />
           <p className="text-[11px] text-[#8ea7c5] mt-1 font-medium">
-            The secure application link <span className="text-gray-400">'?offer=XYZ'</span> will be injected automatically below this message.
+            The secure application link <span className="text-gray-400">&apos;?offer=XYZ&apos;</span> will be injected automatically below this message.
           </p>
         </div>
 
