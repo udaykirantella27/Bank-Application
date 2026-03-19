@@ -4,7 +4,7 @@ const router = express.Router();
 router.get('/', (req, res) => {
   const fs = require('fs');
   const path = require('path');
-  const historyPath = path.join(__dirname, '../data/history.json');
+  const historyPath = path.join(process.cwd(), 'data', 'history.json');
   
   if (fs.existsSync(historyPath)) {
     const data = fs.readFileSync(historyPath, 'utf8');

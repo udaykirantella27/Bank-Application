@@ -49,7 +49,7 @@ router.post('/', async (req, res) => {
     // --- History Tracking ---
     const fs = require('fs');
     const path = require('path');
-    const historyPath = path.join(__dirname, '../data/history.json');
+    const historyPath = path.join(process.cwd(), 'data', 'history.json');
 
     let history = [];
     if (fs.existsSync(historyPath)) {
