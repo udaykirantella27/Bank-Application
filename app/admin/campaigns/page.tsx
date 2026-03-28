@@ -27,7 +27,7 @@ export default function AdminCampaignsPage() {
   }, []);
 
   return (
-    <div className="p-8 sm:p-10 lg:p-12 z-10 max-w-5xl h-full">
+    <div className="p-8 sm:pt-4 sm:px-10 lg:pt-6 lg:px-12 z-10 max-w-5xl h-full">
       <div className="flex justify-between items-center text-gray-900 mb-8">
         <div>
           <h1 className="text-[28px] font-black text-gray-900 mb-2">Campaigns Overview</h1>

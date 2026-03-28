@@ -26,31 +26,47 @@ export async function GET(req: Request) {
         const { data, error } = await query;
 
         if (error) {
-            console.error('Supabase error:', error);
-            return NextResponse.json({ applications: [] });
+            console.error('Supabase query error (loan_applications):', error.message, error.details);
+            return NextResponse.json({ applications: [], error: error.message });
         }
 
-        const applications = (data || []).map((app: Record<string, unknown>) => {
+        const apps = data || [];
+
+        // Fetch profiles for all user_ids to get real name/email
+        const userIds = [...new Set(apps.map((a: any) => a.user_id).filter(Boolean))];
+        let profileMap: Record<string, { name: string | null; email: string | null }> = {};
+
+        if (userIds.length > 0) {
+            const { data: profiles } = await supabase
+                .from('profiles')
+                .select('id, name, email')
+                .in('id', userIds);
+            (profiles || []).forEach((p: any) => {
+                profileMap[p.id] = { name: p.name, email: p.email };
+            });
+        }
+
+        const applications = apps.map((app: Record<string, any>) => {
+            const profile = profileMap[app.user_id] || {};
             return {
                 id: app.id,
                 user_id: app.user_id,
-                // In a real banking app with Supabase Auth, we'd fetch profile data.
-                // For now, mapping directly to prevent the PGRST200 join crash.
-                name: 'Registered Customer',
-                email: 'Secure User',
+                name: profile.name || profile.email?.split('@')[0] || 'Customer',
+                email: profile.email || '',
                 loan_amount: app.loan_amount,
                 loan_purpose: app.loan_purpose,
                 employment_type: app.employment_type,
                 monthly_salary: app.monthly_salary,
-                term_months: app.term_months || 24, // Fallback since it doesn't exist in DB schema
+                term_months: app.term_months || 24,
                 status: app.status,
                 created_at: app.created_at,
             };
         });
 
         return NextResponse.json({ applications });
-    } catch {
-        return NextResponse.json({ applications: [] });
+    } catch (err: any) {
+        console.error('Unhandled internal error in applications API:', err);
+        return NextResponse.json({ applications: [], error: err.message || 'Internal Server Error' });
     }
 }
 

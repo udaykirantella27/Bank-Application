@@ -18,6 +18,13 @@ interface Application {
   created_at: string;
 }
 
+interface LoanDocument {
+  id: string;
+  file_name: string;
+  file_url: string;
+  uploaded_at: string;
+}
+
 export default function AdminApplicationsPage() {
   const [apps, setApps] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,6 +32,8 @@ export default function AdminApplicationsPage() {
   const [search, setSearch] = useState('');
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+  const [appDocs, setAppDocs] = useState<LoanDocument[]>([]);
+  const [loadingDocs, setLoadingDocs] = useState(false);
 
   const fetchApps = async () => {
     setLoading(true);
@@ -46,7 +55,7 @@ export default function AdminApplicationsPage() {
       }
 
       // Map raw db to Application
-      const mappedApps = (data || []).map((app: any) => ({
+      const mappedApps = (data || []).map((app: Record<string, any>) => ({
          id: app.id,
          user_id: app.user_id,
          name: 'Registered Customer',
@@ -69,6 +78,30 @@ export default function AdminApplicationsPage() {
   };
 
   useEffect(() => { fetchApps(); }, [filter]);
+
+  useEffect(() => {
+    const fetchDocs = async () => {
+      if (!selectedApp) {
+        setAppDocs([]);
+        return;
+      }
+      setLoadingDocs(true);
+      try {
+        const { data, error } = await supabase
+          .from('documents')
+          .select('*')
+          .eq('loan_id', selectedApp.id);
+        if (!error && data) {
+          setAppDocs(data);
+        }
+      } catch (e) {
+        console.error('Error fetching documents:', e);
+      } finally {
+        setLoadingDocs(false);
+      }
+    };
+    fetchDocs();
+  }, [selectedApp]);
 
   const handleAction = async (appId: string, action: 'approved' | 'rejected') => {
     setActionLoading(appId);
@@ -105,7 +138,7 @@ export default function AdminApplicationsPage() {
   };
 
   return (
-    <div className="p-8 lg:p-12 max-w-6xl fade-in">
+    <div className="p-8 lg:pt-6 lg:px-12 lg:pb-12 max-w-6xl fade-in">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-[28px] font-black text-gray-900 tracking-tight">Loan Applications</h1>
@@ -255,6 +288,44 @@ export default function AdminApplicationsPage() {
                     {selectedApp.status}
                   </span>
                 </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-100">
+                <h3 className="text-sm font-bold text-slate-800 mb-3">Customer Documents</h3>
+                {loadingDocs ? (
+                  <p className="text-xs text-slate-400">Loading documents...</p>
+                ) : appDocs.length > 0 ? (
+                  <div className="space-y-2">
+                    {appDocs.map((doc) => (
+                      <div key={doc.id} className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <FileText className="h-4 w-4 text-emerald-600" />
+                          <div>
+                            <p className="text-sm font-medium text-slate-700">{doc.file_name}</p>
+                            <p className="text-[10px] text-slate-400">Uploaded: {new Date(doc.uploaded_at).toLocaleDateString()}</p>
+                          </div>
+                        </div>
+                        <button 
+                          className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors"
+                          onClick={() => {
+                            if (doc.file_url) {
+                              // If it's a real URL, open it; otherwise alert simulated view
+                              if (doc.file_url.startsWith('dummy_')) {
+                                alert(`Viewing simulated document: ${doc.file_name}`);
+                              } else {
+                                window.open(doc.file_url, '_blank');
+                              }
+                            }
+                          }}
+                        >
+                          View
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-slate-400 italic">No documents uploaded yet.</p>
+                )}
               </div>
             </div>
 

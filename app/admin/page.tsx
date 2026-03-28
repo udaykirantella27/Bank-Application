@@ -81,9 +81,9 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="p-8 lg:p-12 max-w-6xl fade-in">
+    <div className="p-1 lg:pt-4 lg:px-8 lg:pb-8 max-w-6xl fade-in">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-4">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center shadow-lg shadow-slate-300">
             <BarChart3 className="h-5 w-5 text-white" />

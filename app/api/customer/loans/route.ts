@@ -16,7 +16,7 @@ export async function GET(req: Request) {
         if (email) {
             // Get user by email first
             const { data: user } = await supabase
-                .from('users')
+                .from('profiles')
                 .select('id')
                 .eq('email', email)
                 .single();

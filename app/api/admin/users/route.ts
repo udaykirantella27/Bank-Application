@@ -10,7 +10,7 @@ export async function GET() {
     try {
         // Get users with their loan application count
         const { data: users, error } = await supabase
-            .from('users')
+            .from('profiles')
             .select('id, email, name, phone, role, created_at')
             .order('created_at', { ascending: false });
 

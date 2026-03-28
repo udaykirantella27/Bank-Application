@@ -9,7 +9,7 @@ const supabase = createClient(
 export async function GET() {
     try {
         const [usersRes, appsRes] = await Promise.all([
-            supabase.from('users').select('id', { count: 'exact' }),
+            supabase.from('profiles').select('id', { count: 'exact' }),
             supabase.from('loan_applications').select('id, status, loan_amount'),
         ]);
 

@@ -37,7 +37,7 @@ export default function DashboardPage() {
     const fetchSessionAndLoans = async () => {
       try {
         const { data: { session }, error: authError } = await supabase.auth.getSession();
-        
+
         if (authError || !session) {
           // Fallback to login if non-authenticated
           router.push('/login');
@@ -94,8 +94,8 @@ export default function DashboardPage() {
   const hasPendingLoans = pending.length > 0;
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-[#f8fafc] px-4 sm:px-6 lg:px-8 py-10 relative overflow-hidden">
-      
+    <div className="min-h-[calc(100vh-4rem)] bg-[#f8fafc] px-4 sm:px-6 lg:px-8 py-4 relative overflow-hidden">
+
       {/* Decorative Premium Background Elements */}
       <div className="absolute top-0 left-0 w-full h-[40vh] bg-gradient-to-b from-[#00b074]/5 to-transparent pointer-events-none" />
       <div className="absolute top-20 right-20 w-96 h-96 bg-[#00b074]/10 rounded-full blur-[100px] pointer-events-none" />
@@ -120,32 +120,30 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        {/* Document Upload Banner for Pending Loans */}
-        {hasPendingLoans && (
-          <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#00b074] to-[#008f5d] text-white p-6 shadow-xl slide-up hover:shadow-2xl transition-all group cursor-default">
-            <div className="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-            <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-              <div className="flex items-center gap-5">
-                <div className="bg-white/20 p-3.5 rounded-xl backdrop-blur-md border border-white/20 shadow-inner group-hover:scale-110 transition-transform">
-                  <UploadCloud className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold mb-1 tracking-tight">Action Required: Upload Documents</h3>
-                  <p className="text-emerald-50 text-sm font-medium leading-relaxed">
-                    Upload your ID and financial documents to expedite your pending loan processing. 
-                    Customers who upload documents within 24 hours receive 3x faster approvals.
-                  </p>
-                </div>
+        {/* Document Upload Banner for Loans */}
+        <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#00b074] to-[#008f5d] text-white p-6 shadow-xl slide-up hover:shadow-2xl transition-all group cursor-default">
+          <div className="absolute right-0 top-0 w-64 h-64 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
+          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <div className="bg-white/20 p-3.5 rounded-xl backdrop-blur-md border border-white/20 shadow-inner group-hover:scale-110 transition-transform">
+                <UploadCloud className="h-8 w-8 text-white" />
               </div>
-              <button className="whitespace-nowrap bg-white text-[#008f5d] px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:bg-emerald-50 transition-colors flex items-center gap-2">
-                Upload File securely <ArrowRight className="h-4 w-4" />
-              </button>
+              <div>
+                <h3 className="text-xl font-bold mb-1 tracking-tight">Action Required: Upload Documents</h3>
+                <p className="text-emerald-50 text-sm font-medium leading-relaxed">
+                  Upload documents to get faster verify and processing and approval.
+                </p>
+              </div>
             </div>
+            <Link href="/dashboard/upload" className="whitespace-nowrap bg-white text-[#008f5d] px-6 py-3 rounded-xl font-bold text-sm shadow-md hover:bg-emerald-50 transition-colors flex items-center gap-2">
+              <span>Upload File securely</span>
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
-        )}
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
+
           <div className="lg:col-span-8 flex flex-col gap-8">
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -182,7 +180,7 @@ export default function DashboardPage() {
               ) : apps.length === 0 ? (
                 <div className="p-16 text-center bg-slate-50/50">
                   <div className="bg-white w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-slate-100">
-                     <FileText className="h-8 w-8 text-slate-300" />
+                    <FileText className="h-8 w-8 text-slate-300" />
                   </div>
                   <p className="text-slate-800 font-bold text-lg">{t('dash.noLoansYet')}</p>
                   <p className="text-sm text-slate-500 mt-2 font-medium max-w-sm mx-auto">{t('dash.applyFirst')}</p>
@@ -234,7 +232,7 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
-          
+
           <div className="lg:col-span-4 flex flex-col gap-6">
             {/* Action Panel */}
             <div className="bg-white rounded-2xl border border-slate-200/60 shadow-lg shadow-slate-200/40 p-6 slide-up" style={{ animationDelay: '300ms' }}>
@@ -270,11 +268,10 @@ export default function DashboardPage() {
                   <div key={n.id} className="mb-4 last:mb-0 border-l-2 border-indigo-500/50 pl-4 py-1">
                     <p className="text-sm font-medium text-slate-300">
                       Your <span className="text-white font-bold capitalize">{n.loan_purpose}</span> loan is currently{' '}
-                      <span className={`font-bold uppercase tracking-wider text-[11px] px-2 py-0.5 rounded ml-1 ${
-                        n.status === 'approved' ? 'bg-emerald-500/20 text-emerald-400' :
-                        n.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
-                        'bg-amber-500/20 text-amber-400'
-                      }`}>{n.status}</span>
+                      <span className={`font-bold uppercase tracking-wider text-[11px] px-2 py-0.5 rounded ml-1 ${n.status === 'approved' ? 'bg-emerald-500/20 text-emerald-400' :
+                          n.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
+                            'bg-amber-500/20 text-amber-400'
+                        }`}>{n.status}</span>
                     </p>
                     <p className="text-xs text-slate-500 mt-1.5">{new Date(n.created_at).toLocaleDateString()}</p>
                   </div>

@@ -25,7 +25,27 @@ function LoginContent() {
     // If the URL changes dynamically, we keep the states in sync
     setIsRegistering(searchParams.get('mode') === 'register');
     setFollowupMsg(searchParams.get('loan_followup') === 'true');
-  }, [searchParams]);
+    
+    // Check if user is already logged in
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+         let localRole = localStorage.getItem('bank_user_role');
+         if (!localRole) {
+           const { data } = await supabase.from('profiles').select('role').eq('id', session.user.id).single();
+           if (data?.role) localRole = data.role;
+         }
+         if (session.user.email === 'uday39865@gmail.com') localRole = 'admin';
+         
+         if (localRole === 'admin') {
+           router.push('/admin');
+         } else {
+           router.push('/dashboard');
+         }
+      }
+    };
+    checkSession();
+  }, [searchParams, router]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +57,7 @@ function LoginContent() {
       let sessionUser;
 
       if (isRegistering) {
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error }: { data: any, error: any } = await supabase.auth.signUp({
           email,
           password,
           options: { data: { full_name: name || 'Customer' } }
@@ -86,9 +106,29 @@ function LoginContent() {
         }
       }
 
-      // Supabase role/policy checks are real, but we can store convenience role logic here if needed:
-      if (email === 'uday39865@gmail.com') {
-         // Optionally route admin somewhere special
+      // Fetch user role from database securely
+      let userRole = 'customer';
+      try {
+        const { data: userData } = await supabase.from('profiles').select('role').eq('id', sessionUser.id).single();
+        if (userData?.role) {
+          userRole = userData.role;
+        }
+      } catch(e) {
+        console.error("Failed to fetch user role, defaulting to customer.");
+      }
+
+      // Hardcode override for the owner's test email
+      if (sessionUser.email === 'uday39865@gmail.com') {
+         userRole = 'admin';
+         // Also update the database so RLS policies don't block their access
+         await supabase.from('profiles').update({ role: 'admin' }).eq('id', sessionUser.id);
+      }
+
+      // Update local storage so Navbar reflects state immediately
+      localStorage.setItem('bank_user_email', sessionUser.email || email);
+      localStorage.setItem('bank_user_role', userRole);
+
+      if (userRole === 'admin') {
          window.location.href = '/admin';
       } else {
          window.location.href = '/dashboard';
@@ -101,7 +141,17 @@ function LoginContent() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+    <div className="relative min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+      {/* Minimal header — global Navbar is hidden on auth pages */}
+      <div className="absolute top-0 left-0 right-0 flex items-center justify-between px-6 py-4">
+        <Link href="/" className="flex items-center gap-2 group">
+          <BankLogo size={32} animated={false} />
+          <span className="font-black text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-[#00b074] to-[#008f5d]">QIB</span>
+        </Link>
+        <Link href="/" className="text-sm text-slate-500 hover:text-slate-800 transition-colors font-medium">
+          ← Back to Home
+        </Link>
+      </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-md fade-in">
         <div className="flex justify-center">
           <Link href="/">
@@ -153,6 +203,13 @@ function LoginContent() {
             <div className={`mb-6 p-4 rounded-xl flex items-start gap-3 text-sm bg-red-50 text-red-600`}>
               <AlertCircle className="h-5 w-5 shrink-0" />
               <p>{error}</p>
+            </div>
+          )}
+
+          {isRegistering && (
+            <div className="mb-6 p-4 rounded-xl flex items-start gap-3 text-sm bg-emerald-50/50 border border-emerald-100 text-emerald-800">
+              <Info className="h-5 w-5 shrink-0 text-emerald-600" />
+              <p><strong>Note:</strong> To get faster processing, register and track your loan application.</p>
             </div>
           )}
 
@@ -239,7 +296,7 @@ function LoginContent() {
 export default function Login() {
   return (
     <Suspense fallback={
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <Loader2 className="h-10 w-10 text-[#00b074] animate-spin" />
       </div>
     }>

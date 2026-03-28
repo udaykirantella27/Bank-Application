@@ -70,7 +70,7 @@ export default function SendPromoPage() {
     };
 
     return (
-        <div className="p-8 lg:p-12 max-w-5xl fade-in">
+        <div className="p-8 lg:pt-4 lg:px-12 lg:pb-12 max-w-5xl fade-in">
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">

@@ -80,7 +80,7 @@ export default function AdminNotifications() {
     return (
         <>
             {/* Toast Notifications */}
-            <div className="fixed top-20 right-5 z-[200] flex flex-col gap-3 w-[360px]">
+            <div className="fixed top-20 right-5 z-[100] flex flex-col gap-3 w-[360px]">
                 {toasts.map((toast) => (
                     <div
                         key={toast.id}
@@ -89,7 +89,7 @@ export default function AdminNotifications() {
                         <div className="flex items-start justify-between gap-3">
                             <div className="flex items-start gap-3">
                                 <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
-                                    <Bell className="h-5 w-5 text-emerald-500" />
+                                    <Bell className="h-3.5 w-3.5 text-emerald-500" />
                                 </div>
                                 <div>
                                     <p className="text-sm font-bold text-slate-900">🔔 New Loan Application!</p>

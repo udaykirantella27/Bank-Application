@@ -41,7 +41,7 @@ export default function AdminUsersPage() {
   );
 
   return (
-    <div className="p-8 lg:p-12 max-w-6xl fade-in">
+    <div className="p-8 lg:pt-6 lg:px-12 lg:pb-12 max-w-6xl fade-in">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-[28px] font-black text-gray-900 tracking-tight">User Directory</h1>

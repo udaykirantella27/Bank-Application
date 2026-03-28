@@ -21,6 +21,11 @@
   --radius: 0.75rem;
 }
 
+/* Conditionally remove root layout padding for Admin area */
+main:has(> .admin-layout-root) {
+  padding-top: 0 !important;
+}
+
 * {
   border-color: var(--border);
 }

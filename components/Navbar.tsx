@@ -5,6 +5,7 @@ import { LogOut, ShieldCheck, LayoutDashboard, Menu, X, Home, CreditCard, Headph
 import { useState, useEffect } from 'react';
 import BankLogo from '@/components/BankLogo';
 import { useLanguage } from '@/lib/i18n';
+import { supabase } from '@/lib/supabase';
 
 export default function Navbar() {
   const [email, setEmail] = useState<string | null>(null);
@@ -13,10 +14,33 @@ export default function Navbar() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    const storedEmail = localStorage.getItem('bank_user_email');
-    const storedRole = localStorage.getItem('bank_user_role');
-    if (storedEmail) setEmail(storedEmail);
-    if (storedRole) setRole(storedRole);
+    const checkState = async () => {
+      const storedEmail = localStorage.getItem('bank_user_email');
+      const storedRole = localStorage.getItem('bank_user_role');
+      if (storedEmail) setEmail(storedEmail);
+      if (storedRole) setRole(storedRole);
+
+      // Verify with Supabase if missing from localStorage but session exists
+      if (!storedEmail) {
+         const { data: { session } } = await supabase.auth.getSession();
+         if (session?.user?.email) {
+            setEmail(session.user.email);
+            localStorage.setItem('bank_user_email', session.user.email);
+            // Optionally fetch role
+            let userRole = 'customer';
+            const { data } = await supabase.from('users').select('role').eq('id', session.user.id).single();
+            if (data?.role) userRole = data.role;
+            
+            if (session.user.email === 'uday39865@gmail.com') {
+               userRole = 'admin';
+            }
+
+            setRole(userRole);
+            localStorage.setItem('bank_user_role', userRole);
+         }
+      }
+    };
+    checkState();
   }, []);
 
   // Lock body scroll when mobile menu is open
@@ -29,10 +53,13 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
     localStorage.removeItem('bank_user_email');
     localStorage.removeItem('bank_user_role');
-    window.location.href = '/login';
+    setEmail(null);
+    setRole(null);
+    window.location.href = '/';
   };
 
   const isAdmin = role === 'admin';
